@@ -26,7 +26,7 @@ public class UpdateChecker {
         String cV = plugin.getDescription().getVersion();
 
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL("https://raw.githubusercontent.com/asdjajalol/Bounties/main/src/main/resources/plugin.yml").openConnection();
+            HttpURLConnection con = (HttpURLConnection) new URL("https://raw.githubusercontent.com/asdjajalol/Bounties/master/src/main/resources/plugin.yml").openConnection();
             con.connect();
             for (String s : new BufferedReader(new InputStreamReader(con.getInputStream())).lines().toList()) {
                 if (s.contains("version:")) {
