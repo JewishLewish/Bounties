@@ -1,0 +1,71 @@
+package net.gonzq.bounties;
+
+import net.gonzq.bounties.Commands.BountyCommand;
+import net.gonzq.bounties.Files.BountyFile;
+import net.gonzq.bounties.Listeners.InventoryEvent;
+import net.gonzq.bounties.Listeners.KillEvent;
+import net.gonzq.bounties.Utils.UpdateChecker;
+import net.gonzq.bounties.Utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class Main extends JavaPlugin {
+
+    public static Main plugin;
+
+    private int version;
+
+    public BountyFile bounty;
+    public String prefix = Utils.chat("&c&lBounties&8» &7");
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        plugin = this;
+        setupVersion();
+
+        bounty = new BountyFile(this);
+
+        new BountyCommand();
+        new KillEvent();
+        new InventoryEvent();
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+    private void setupVersion() {
+        String versionString = Bukkit.getVersion();
+        version = 0;
+
+        for (int i = 8; i <= 19; i++) {
+            if (versionString.contains("1." + i)) {
+                version = i;
+            }
+        }
+        if (version == 0) {
+            getLogger().warning("The plugin isn't compatible with this server version! (" + versionString + ")");
+            getLogger().warning("The Plugin has been disabled!");
+            Bukkit.getPluginManager().disablePlugin(this);
+        } else {
+            getLogger().info("1." + version + " Server detected!");
+            new UpdateChecker(this,2958215).getVersion();
+           /* new UpdateChecker(this, 106551).getVersion(version -> {
+                int newVers = Integer.parseInt(version.replace(".", ""));
+                int currentVers = Integer.parseInt(getDescription().getVersion().replace(".",""));
+                if (currentVers >= newVers) return;
+                getLogger().info("=============== Bounties ===============");
+                getLogger().info("- Plugin made by: Gonzq#4451");
+                getLogger().info("- Current Version: " + getDescription().getVersion());
+                getLogger().info("- There is a new version available: " + version);
+                getLogger().info("- Download Link: https://www.spigotmc.org/resources/bounties-1-8-1-19.106551/");
+                getLogger().info("=============== Bounties ===============");
+            });*/
+        }
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+}
