@@ -14,16 +14,13 @@ import java.util.List;
 
 public final class Main extends JavaPlugin {
 
-    public static Main plugin;
-
     private int version;
-
     public BountyFile bounty;
     public String prefix = Utils.chat("&c&lBounties&8» &7");
     @Override
     public void onEnable() {
         // Plugin startup logic
-        plugin = this;
+
         setupVersion();
 
         bounty = new BountyFile(this);
@@ -38,35 +35,26 @@ public final class Main extends JavaPlugin {
         // Plugin shutdown logic
     }
     private void setupVersion() {
-        String versionString = Bukkit.getVersion();
-        version = 0;
 
-        for (int i = 8; i <= 19; i++) {
-            if (versionString.contains("1." + i)) {
-                version = i;
-            }
+
+        getLogger().info(Bukkit.getBukkitVersion() + " Server detected!");
+        UpdateChecker c = new UpdateChecker(this);
+        int currentVer = Integer.parseInt(getDescription().getVersion().replace(".",""));
+        int newVer = Integer.parseInt(c.getVersion().replace(".",""));
+
+        List<String> msg = new ArrayList<>();
+        msg.add("=============== Bounties ===============");
+        msg.add("- Plugin made by: Gonzq#4451");
+        msg.add("- Current Version: " + getDescription().getVersion());
+        if (currentVer < newVer) {
+            msg.add("- There is a new version available: " + c.getVersion());
+            msg.add("- Download Link: https://www.spigotmc.org/resources/bounties-1-8-1-19.106551/");
         }
-        if (version == 0) {
-            getLogger().warning("The plugin isn't compatible with this server version! (" + versionString + ")");
-            getLogger().warning("The Plugin has been disabled!");
-            Bukkit.getPluginManager().disablePlugin(this);
-        } else {
-            getLogger().info("1." + version + " Server detected!");
-            UpdateChecker c = new UpdateChecker(this);
-            int currentVer = Integer.parseInt(getDescription().getVersion().replace(".",""));
-            int newVer = Integer.parseInt(c.getVersion().replace(".",""));
-            List<String> msg = new ArrayList<>();
-            msg.add("=============== Bounties ===============");
-            msg.add("- Plugin made by: Gonzq#4451");
-            msg.add("- Current Version: " + getDescription().getVersion());
-            if (currentVer < newVer) {
-                msg.add("- There is a new version available: " + c.getVersion());
-                msg.add("- Download Link: https://www.spigotmc.org/resources/bounties-1-8-1-19.106551/");
-            }
-            msg.add("=============== Bounties ===============");
-            msg.forEach(s -> getLogger().info(s));
-        }
+        msg.add("=============== Bounties ===============");
+        msg.forEach(s -> getLogger().info(s));
+
     }
+
 
     public int getVersion() {
         return version;
