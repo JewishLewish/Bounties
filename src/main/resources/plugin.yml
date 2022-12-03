@@ -1,5 +1,5 @@
 name: Bounties
-version: 1.1
+version: 1.0
 main: net.gonzq.bounties.Main
 api-version: 1.19
 author: Gonzq#4451
