@@ -15,28 +15,27 @@ import java.util.stream.Collectors;
 public class UpdateChecker {
 
     private final JavaPlugin plugin;
-    private final int resourceId;
 
-    public UpdateChecker(JavaPlugin plugin, int resourceId) {
+    public UpdateChecker(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.resourceId = resourceId;
     }
 
-    public void getVersion() {
-        String cV = plugin.getDescription().getVersion();
-
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL("https://raw.githubusercontent.com/asdjajalol/Bounties/master/src/main/resources/plugin.yml").openConnection();
-            con.connect();
-            for (String s : new BufferedReader(new InputStreamReader(con.getInputStream())).lines().toList()) {
-                if (s.contains("version:")) {
-                    System.out.println(s.replace("version:", ""));
-                    break;
+    public String getVersion() {
+        final String[] v = {"0.0"};
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                HttpURLConnection con = (HttpURLConnection) new URL("https://raw.githubusercontent.com/asdjajalol/Bounties/master/src/main/resources/plugin.yml").openConnection();
+                con.connect();
+                for (String s : new BufferedReader(new InputStreamReader(con.getInputStream())).lines().toList()) {
+                    if (s.contains("version:")) {
+                        v[0] = s.replace("version:", "");
+                        break;
+                    }
                 }
-            }
-            System.out.println(cV);
-            con.disconnect();
-        } catch (Exception ignored) {}
+                con.disconnect();
+            } catch (Exception ignored) {}
+        });
+        return v[0];
     }
 
     /*public void getVersion(final Consumer<String> consumer) {

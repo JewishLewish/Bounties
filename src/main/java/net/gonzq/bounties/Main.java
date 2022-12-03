@@ -9,6 +9,9 @@ import net.gonzq.bounties.Utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Main extends JavaPlugin {
 
     public static Main plugin;
@@ -49,18 +52,19 @@ public final class Main extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         } else {
             getLogger().info("1." + version + " Server detected!");
-            new UpdateChecker(this,2958215).getVersion();
-           /* new UpdateChecker(this, 106551).getVersion(version -> {
-                int newVers = Integer.parseInt(version.replace(".", ""));
-                int currentVers = Integer.parseInt(getDescription().getVersion().replace(".",""));
-                if (currentVers >= newVers) return;
-                getLogger().info("=============== Bounties ===============");
-                getLogger().info("- Plugin made by: Gonzq#4451");
-                getLogger().info("- Current Version: " + getDescription().getVersion());
-                getLogger().info("- There is a new version available: " + version);
-                getLogger().info("- Download Link: https://www.spigotmc.org/resources/bounties-1-8-1-19.106551/");
-                getLogger().info("=============== Bounties ===============");
-            });*/
+            UpdateChecker c = new UpdateChecker(this);
+            int currentVer = Integer.parseInt(getDescription().getVersion().replace(".",""));
+            int newVer = Integer.parseInt(c.getVersion().replace(".",""));
+            List<String> msg = new ArrayList<>();
+            msg.add("=============== Bounties ===============");
+            msg.add("- Plugin made by: Gonzq#4451");
+            msg.add("- Current Version: " + getDescription().getVersion());
+            if (currentVer < newVer) {
+                msg.add("- There is a new version available: " + c.getVersion());
+                msg.add("- Download Link: https://www.spigotmc.org/resources/bounties-1-8-1-19.106551/");
+            }
+            msg.add("=============== Bounties ===============");
+            msg.forEach(s -> getLogger().info(s));
         }
     }
 
